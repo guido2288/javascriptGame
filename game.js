@@ -9,11 +9,21 @@ const btnRigth = document.querySelector('#right');
 
 let canvasSize;
 let elementSize;
+let level = 0;
+let lives = 3;
 
 const playerPosition = {
   x: undefined,
   y: undefined
 };
+
+const cookiePosition = {
+  x: undefined,
+  y: undefined
+};
+
+let bombsPosition = [];
+
 
 window.addEventListener('load', setCanvasSize);
 window.addEventListener('resize', setCanvasSize);
@@ -43,11 +53,20 @@ function startGame() {
   game.font = elementSize + 'px Verdana';
   game.textAlign = 'end';
 
-  const map = maps[0];
+  const map = maps[level];
+
+  if (!map) {
+    alert('Ganaste el Juego! 😸');
+    return;
+  };
+
+
   const mapsRows = map.trim().split('\n');
   const mapRowCols = mapsRows.map(row => row.trim().split(''));
 
   game.clearRect(0, 0, canvasSize, canvasSize);
+
+  bombsPosition = [];
 
   mapRowCols.forEach((row, rowIndex) => {
     row.forEach((col, colIndex) => {
@@ -60,8 +79,18 @@ function startGame() {
         if (!playerPosition.x && !playerPosition.y) {
           playerPosition.x = postX;
           playerPosition.y = postY;
-        }
-      }
+        };
+
+
+      } else if (col == 'I') {
+        cookiePosition.x = postX;
+        cookiePosition.y = postY;
+      } else if (col == 'X') {
+        bombsPosition.push({
+          x: postX,
+          y: postY
+        });
+      };
 
       game.fillText(emoji, postX, postY)
 
@@ -74,8 +103,51 @@ function startGame() {
 };
 
 function movePlayer() {
+
+  // Validacion cookie
+  const cookieCollisionX = Math.round(playerPosition.x) == Math.round(cookiePosition.x);
+  const cookieCollisionY = Math.round(playerPosition.y) == Math.round(cookiePosition.y);
+  const cookieCollision = cookieCollisionX && cookieCollisionY;
+
+  if (cookieCollision) {
+    levelWin();
+  };
+
+  // Validacion Bombs
+  const bombsCollision = bombsPosition.find(bomb => {
+    const bombCollisionX = Math.round(bomb.x) == Math.round(playerPosition.x);
+    const bombCollisionY = Math.round(bomb.y) == Math.round(playerPosition.y);
+
+    return bombCollisionX && bombCollisionY;
+  });
+
+  if (bombsCollision) {
+    liveLost();
+  };
+
   game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y)
-  console.log('moviste')
+
+};
+
+function liveLost() {
+
+  lives--;
+
+  if (lives <= 0) {
+    alert('Perdiste todas las vidas! 🙀');
+    level = 0;
+    lives = 3;
+  }
+
+  playerPosition.x = undefined;
+  playerPosition.y = undefined;
+  startGame();
+}
+
+
+function levelWin() {
+  level++;
+  startGame()
 }
 
 // Acciones al moverse
