@@ -59,6 +59,7 @@ p {
   display: block;
   margin: 0;
   width: 100%;
+  font-size: 30px;
 }
 
 @media (max-width: 440px) {

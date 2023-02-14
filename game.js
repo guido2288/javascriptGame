@@ -6,11 +6,20 @@ const btnUp = document.querySelector('#up');
 const btnDown = document.querySelector('#down');
 const btnLeft = document.querySelector('#left');
 const btnRigth = document.querySelector('#right');
+const spanLives = document.querySelector('#lives');
+const spanTime = document.querySelector('#time');
+const spanRecord = document.querySelector('#record');
+const pResult = document.querySelector('#result');
+
 
 let canvasSize;
 let elementSize;
 let level = 0;
 let lives = 3;
+
+let timeStart;
+let timePlayer;
+let timeInterval;
 
 const playerPosition = {
   x: undefined,
@@ -56,17 +65,25 @@ function startGame() {
   const map = maps[level];
 
   if (!map) {
-    alert('Ganaste el Juego! 😸');
-    return;
+    gameWin();
+    return
   };
+
+
+  if (!timeStart) {
+    timeStart = Date.now();
+    timeInterval = setInterval(showTime, 100);
+    showRecord();
+  };
+
 
 
   const mapsRows = map.trim().split('\n');
   const mapRowCols = mapsRows.map(row => row.trim().split(''));
 
-  game.clearRect(0, 0, canvasSize, canvasSize);
-
+  showLives();
   bombsPosition = [];
+  game.clearRect(0, 0, canvasSize, canvasSize);
 
   mapRowCols.forEach((row, rowIndex) => {
     row.forEach((col, colIndex) => {
@@ -133,10 +150,13 @@ function liveLost() {
 
   lives--;
 
+
+
   if (lives <= 0) {
     alert('Perdiste todas las vidas! 🙀');
     level = 0;
     lives = 3;
+    timeStart = undefined;
   }
 
   playerPosition.x = undefined;
@@ -147,8 +167,51 @@ function liveLost() {
 
 function levelWin() {
   level++;
-  startGame()
+  startGame();
+};
+
+function gameWin() {
+  clearInterval(timeInterval);
+  alert(`Felicidades Terminaste el juego! tu tiempo fue de ${Date.now() - timeStart}`);
+
+  const recordTime = localStorage.getItem('record_time');
+  const playerTime = Date.now() - timeStart;
+
+  if (recordTime) {
+    if (recordTime >= playerTime) {
+      localStorage.setItem('record_time', playerTime);
+      alert(`Felicidades nuevo tiempo record: ${playerTime}!!`);
+      pResult.innerText = 'Nuevo Record!'
+    };
+  } else {
+    localStorage.setItem('record_time', playerTime);
+    pResult.innerText = 'Nuevo Record!'
+  }
+
+  console.log({ recordTime, playerTime })
 }
+
+function showLives() {
+
+  const livesArray = Array(lives).fill(emojis['LIVES']);
+
+  spanLives.innerHTML = livesArray.join('');
+};
+
+function showTime() {
+
+
+
+  spanTime.innerHTML = (((Date.now() - timeStart) % 60000) / 1000).toFixed(0);
+
+};
+
+
+function showRecord() {
+
+  spanRecord.innerHTML = localStorage.getItem('record_time');
+
+};
 
 // Acciones al moverse
 

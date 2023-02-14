@@ -7,6 +7,7 @@ const emojis = {
   BOMB_COLLISION: "🔥",
   GAME_OVER: "👎",
   WIN: "🏆",
+  LIVES: "😸"
 };
 const maps = [];
 maps.push(`
@@ -34,7 +35,7 @@ maps.push(`
   XXXXXXXXXX
   `);
 maps.push(`
-  I-----XXXX
+  XI----XXXX
   XXXXX-XXXX
   XX----XXXX
   XX-XXXXXXX
