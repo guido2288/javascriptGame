@@ -43,9 +43,9 @@ window.addEventListener('resize', setCanvasSize);
 function setCanvasSize() {
 
   if (window.innerHeight > window.innerWidth) {
-    canvasSize = window.innerWidth * 0.8;
+    canvasSize = window.innerWidth * 0.7;
   } else {
-    canvasSize = window.innerHeight * 0.8;
+    canvasSize = window.innerHeight * 0.7;
   }
 
   canvas.setAttribute('width', canvasSize);
@@ -172,15 +172,20 @@ function levelWin() {
 
 function gameWin() {
   clearInterval(timeInterval);
-  alert(`Felicidades Terminaste el juego! tu tiempo fue de ${Date.now() - timeStart}`);
+
+  const playerTime = Date.now() - timeStart;
+
+  let minutes = Math.floor(playerTime / 60000);
+  let seconds = ((playerTime % 60000) / 1000).toFixed(0);
+  let timeShow = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+  alert(`Felicidades Terminaste el juego! tu tiempo fue de ${timeShow}`);
 
   const recordTime = localStorage.getItem('record_time');
-  const playerTime = Date.now() - timeStart;
 
   if (recordTime) {
     if (recordTime >= playerTime) {
       localStorage.setItem('record_time', playerTime);
-      alert(`Felicidades nuevo tiempo record: ${playerTime}!!`);
+      alert(`Felicidades nuevo tiempo record: ${timeShow}!!`);
       pResult.innerText = 'Nuevo Record!'
     };
   } else {
@@ -188,7 +193,7 @@ function gameWin() {
     pResult.innerText = 'Nuevo Record!'
   }
 
-  console.log({ recordTime, playerTime })
+
 }
 
 function showLives() {
@@ -200,16 +205,21 @@ function showLives() {
 
 function showTime() {
 
+  let minutes = Math.floor((Date.now() - timeStart) / 60000);
+  let seconds = (((Date.now() - timeStart) % 60000) / 1000).toFixed(0);
 
+  spanTime.innerHTML = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
 
-  spanTime.innerHTML = (((Date.now() - timeStart) % 60000) / 1000).toFixed(0);
 
 };
 
 
 function showRecord() {
 
-  spanRecord.innerHTML = localStorage.getItem('record_time');
+  let minutes = Math.floor(localStorage.getItem('record_time') / 60000);
+  let seconds = ((localStorage.getItem('record_time') % 60000) / 1000).toFixed(0);
+
+  spanRecord.innerHTML = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
 
 };
 

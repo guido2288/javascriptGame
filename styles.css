@@ -49,22 +49,21 @@ button:not(:last-child) {
 
 .messages {
   display: flex;
-  flex-wrap: wrap;
-  margin: 0 auto;
   width: 80%;
-  max-width: 460px;
+  flex-wrap: wrap;
+  max-width: 480px;
 }
 
 p {
   display: block;
   margin: 0;
   width: 100%;
-  font-size: 30px;
+  font-size: 20px;
 }
 
 @media (max-width: 440px) {
   button {
-    margin-top: 25px;
+    margin-top: 5px;
   }
 
   #up,
