@@ -53,6 +53,9 @@ function setCanvasSize() {
 
   elementSize = canvasSize / 10;
 
+  playerPosition.x = undefined;
+  playerPosition.y = undefined;
+
   startGame();
 
 };
@@ -75,8 +78,6 @@ function startGame() {
     timeInterval = setInterval(showTime, 100);
     showRecord();
   };
-
-
 
   const mapsRows = map.trim().split('\n');
   const mapRowCols = mapsRows.map(row => row.trim().split(''));
@@ -253,7 +254,9 @@ function moveByKeys(e) {
 
 function moveUp() {
 
-  if ((playerPosition.y - elementSize) < 0) {
+  console.log({ playerPosition, elementSize })
+
+  if ((playerPosition.y - elementSize) < 5) {
     console.log('Out')
   } else {
     playerPosition.y -= elementSize;
